@@ -9,8 +9,8 @@ namespace Medium.Users.Core.Interfaces.Services
 
         string BioSavePhotoPath { get; set; }
 
-        void SavePhotoAsync(IFormFile file, string path, CancellationToken cancellationToken = default);
+        void SaveFileAsync(IFormFile file, string path, CancellationToken cancellationToken = default);
 
-        void DeletePhotoAsync(string path, CancellationToken cancellationToken = default);
+        void DeleteFileAsync(string path, CancellationToken cancellationToken = default);
     }
 }

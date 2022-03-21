@@ -13,9 +13,9 @@ namespace Medium.Users.Application.Handlers.Users.Commands.CreateUser
 {
     public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Guid>
     {
-        private readonly IDatabaseContext database;
-
         private readonly ILogger<CreateUserCommandHandler> logger;
+
+        private readonly IDatabaseContext database;
 
         public CreateUserCommandHandler(IDatabaseContext database, ILogger<CreateUserCommandHandler> logger) => 
             (this.database, this.logger) = (database, logger);
@@ -41,7 +41,7 @@ namespace Medium.Users.Application.Handlers.Users.Commands.CreateUser
                 PasswordSalt = hashPassword.Salt,
             };
 
-            await database.Users.AddAsync(user);
+            database.Users.Add(user);
             await database.SaveChangesAsync(cancellationToken);
 
             logger.LogInformation($"User: \"{user.Name}\" was successfully created");

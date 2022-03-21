@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Medium.Users.Application.Common;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Medium.Users.Application
@@ -15,6 +16,26 @@ namespace Medium.Users.Application
                 opt.InstanceName = "UsersCache";
             });
 
+            AuthOptions authOptions = configuration.GetSection("Auth").Get<AuthOptions>();
+
+            services.AddOptions();
+            services.Configure<AuthOptions>((opt) => opt = authOptions);
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                       .AddJwtBearer(options =>
+                       {
+                           options.RequireHttpsMetadata = false;
+                           options.TokenValidationParameters = new TokenValidationParameters
+                           {
+                               ValidateIssuer = true,
+                               ValidateAudience = true,
+                               ValidateLifetime = true,
+                               ValidateIssuerSigningKey = true,
+                               ValidIssuer = AuthOptions.Issuer,
+                               ValidAudience = AuthOptions.Audience,
+                               IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
+                           };
+                       });
 
             return services;
         }
