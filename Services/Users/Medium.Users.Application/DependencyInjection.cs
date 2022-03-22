@@ -1,6 +1,8 @@
 ﻿using Medium.Users.Application.Common;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Medium.Users.Application
 {
@@ -31,9 +33,9 @@ namespace Medium.Users.Application
                                ValidateAudience = true,
                                ValidateLifetime = true,
                                ValidateIssuerSigningKey = true,
-                               ValidIssuer = AuthOptions.Issuer,
-                               ValidAudience = AuthOptions.Audience,
-                               IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
+                               ValidIssuer = authOptions.Issuer,
+                               ValidAudience = authOptions.Audience,
+                               IssuerSigningKey = authOptions.GetSymmetricSecurityKey(),
                            };
                        });
 
