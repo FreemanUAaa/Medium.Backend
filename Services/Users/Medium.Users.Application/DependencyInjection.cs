@@ -1,8 +1,14 @@
-﻿using Medium.Users.Application.Common;
+﻿using FluentValidation;
+using MediatR;
+using Medium.Users.Application.Common;
+using Medium.Users.Application.Common.Behaviors;
+using Medium.Users.Application.Services;
+using Medium.Users.Core.Interfaces.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using System.Reflection;
 
 namespace Medium.Users.Application
 {
@@ -18,10 +24,20 @@ namespace Medium.Users.Application
                 opt.InstanceName = "UsersCache";
             });
 
+            services.AddTransient<IFileManager>((services) => new FileManager(
+                @"D:\sharp\Medium\Medium\Services\Users\Medium.Users.Api\wwwroot\BioPhotos\",
+                @"D:\sharp\Medium\Medium\Services\Users\Medium.Users.Api\wwwroot\UserPhotos\"
+            ));
+
+            services.AddMediatR(Assembly.GetExecutingAssembly());
+            services.AddValidatorsFromAssemblies(new[] { Assembly.GetExecutingAssembly() });
+
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(CachingBehavior<,>));
+
             AuthOptions authOptions = configuration.GetSection("Auth").Get<AuthOptions>();
 
-            services.AddOptions();
-            services.Configure<AuthOptions>((opt) => opt = authOptions);
+            services.Configure<AuthOptions>(configuration.GetSection("Auth"));
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                        .AddJwtBearer(options =>
