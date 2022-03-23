@@ -3,36 +3,35 @@ using Medium.Users.Core.Exceptions;
 using Medium.Users.Core.Interfaces;
 using Medium.Users.Core.Interfaces.Services;
 using Medium.Users.Core.Models;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Medium.Users.Application.Handlers.UserPhotos.Queries.GetUserPhotoBytes
+namespace Medium.Users.Application.Handlers.BioPhotos.Queries.GetBioPhotoBytes
 {
-    public class GetUserPhotoBytesQueryHandler : IRequestHandler<GetUserPhotoBytesQuery, byte[]>
+    public class GetBioPhotoBytesQueryHandler : IRequestHandler<GetBioPhotoBytesQuery, byte[]>
     {
-        private readonly ILogger<GetUserPhotoBytesQueryHandler> logger;
+        private readonly ILogger<GetBioPhotoBytesQueryHandler> logger;
 
         private readonly IDatabaseContext database;
 
         private readonly IFileManager fileManager;
 
-        public GetUserPhotoBytesQueryHandler(IDatabaseContext database, IFileManager fileManager, ILogger<GetUserPhotoBytesQueryHandler> logger) =>
+        public GetBioPhotoBytesQueryHandler(IDatabaseContext database, IFileManager fileManager, ILogger<GetBioPhotoBytesQueryHandler> logger) =>
             (this.database, this.fileManager, this.logger) = (database, fileManager, logger);
 
-        public async Task<byte[]> Handle(GetUserPhotoBytesQuery request, CancellationToken cancellationToken)
+        public async Task<byte[]> Handle(GetBioPhotoBytesQuery request, CancellationToken cancellationToken)
         {
-            UserPhoto userPhoto = await database.UserPhotos.FirstOrDefaultAsync(x => x.UserId == request.UserId);
+            BioPhoto bioPhoto = await database.BioPhotos.FindAsync(request.BioPhotoId);
 
-            if (userPhoto == null)
+            if (bioPhoto == null)
             {
                 throw new Exception(ExceptionStrings.NotFound);
             }
 
-            string filePath = Path.Combine(fileManager.UserSavePhotoPath, userPhoto.FileName);
+            string filePath = Path.Combine(fileManager.BioSavePhotoPath, bioPhoto.FileName);
 
             if (!File.Exists(filePath))
             {
