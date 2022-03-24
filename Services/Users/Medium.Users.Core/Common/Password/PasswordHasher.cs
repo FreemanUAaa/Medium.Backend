@@ -16,9 +16,7 @@ namespace Medium.Users.Core.Common.Password
         {
             if (salt == null)
             {
-                salt = new byte[SaltSize];
-                using RNGCryptoServiceProvider rngCsp = new RNGCryptoServiceProvider();
-                rngCsp.GetNonZeroBytes(salt);
+                salt = GetNewSalt();
             }
 
             string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
@@ -26,6 +24,14 @@ namespace Medium.Users.Core.Common.Password
                 iterationCount: IterationCount, numBytesRequested: NumBytesRequested));
 
             return new PasswordHashResponse() { Hash = hashed, Salt = salt };
+        }
+
+        public static byte[] GetNewSalt()
+        {
+            byte[] salt = new byte[SaltSize];
+            using RNGCryptoServiceProvider rngCsp = new RNGCryptoServiceProvider();
+            rngCsp.GetNonZeroBytes(salt);
+            return salt;
         }
     }
 }

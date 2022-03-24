@@ -1,7 +1,12 @@
-﻿using Castle.Core.Logging;
+﻿using AutoMapper;
+using Castle.Core.Logging;
+using Medium.Users.Api;
+using Medium.Users.Application.Common.Mapper;
 using Medium.Users.Application.Services;
 using Medium.Users.Core.Interfaces;
+using Medium.Users.Core.Interfaces.Mapper;
 using Medium.Users.Core.Interfaces.Services;
+using Medium.Users.Database;
 using Medium.Users.Tests.Database;
 using Moq;
 
@@ -13,6 +18,8 @@ namespace Medium.Users.Tests.Tests.Base
 
         public readonly IFileManager FileManager;
 
+        public readonly IMapper Mapper;
+
         public BaseQueryTests()
         {
             Database = DatabaseContextFactory.Create();
@@ -21,6 +28,16 @@ namespace Medium.Users.Tests.Tests.Base
                 @"D:\sharp\Medium\Medium\Services\Users\Medium.Users.Tests\SavedPhotos\UserPhotos\",
                 @"D:\sharp\Medium\Medium\Services\Users\Medium.Users.Tests\SavedPhotos\BioPhotos\"
             );
+
+            MapperConfiguration configurationProvider = new MapperConfiguration(config =>
+            {
+                config.AddProfile(new AssemblyMappingProfile(typeof(Startup).Assembly));
+                config.AddProfile(new AssemblyMappingProfile(typeof(DatabaseContext).Assembly));
+                config.AddProfile(new AssemblyMappingProfile(typeof(IMapWith<>).Assembly));
+                config.AddProfile(new AssemblyMappingProfile(typeof(AssemblyMappingProfile).Assembly));
+            });
+
+            Mapper = configurationProvider.CreateMapper();
         }
     }
 }

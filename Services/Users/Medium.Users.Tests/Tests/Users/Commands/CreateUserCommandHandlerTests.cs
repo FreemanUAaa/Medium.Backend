@@ -34,7 +34,7 @@ namespace Medium.Users.Tests.Tests.Users.Commands
         [Fact]
         public async void CreateUserCommandHandlerFailOnWrongEmail()
         {
-            User user = await CreateAndAddToDatabaseUser();
+            User user = await CreateAndAddUserToDatabase();
             ILogger<CreateUserCommandHandler> logger = new Mock<ILogger<CreateUserCommandHandler>>().Object;
             CreateUserCommandHandler handler = new CreateUserCommandHandler(Database, logger);
             CreateUserCommand command = new CreateUserCommand()
@@ -49,7 +49,7 @@ namespace Medium.Users.Tests.Tests.Users.Commands
                 await handler.Handle(command, CancellationToken.None));
         }
 
-        private async Task<User> CreateAndAddToDatabaseUser()
+        private async Task<User> CreateAndAddUserToDatabase()
         {
             User user = new User() 
             {

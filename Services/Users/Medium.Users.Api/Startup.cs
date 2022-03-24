@@ -5,6 +5,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Medium.Users.Application;
 using Medium.Users.Database;
+using Medium.Users.Application.Common.Mapper;
+using Medium.Users.Core.Interfaces.Mapper;
+using System.Reflection;
 
 namespace Medium.Users.Api
 {
@@ -23,6 +26,14 @@ namespace Medium.Users.Api
 
             services.AddApplication(Configuration);
             services.AddDatabase(connection);
+
+            services.AddAutoMapper(config =>
+            {
+                config.AddProfile(new AssemblyMappingProfile(Assembly.GetExecutingAssembly()));
+                config.AddProfile(new AssemblyMappingProfile(typeof(DatabaseContext).Assembly));
+                config.AddProfile(new AssemblyMappingProfile(typeof(IMapWith<>).Assembly));
+                config.AddProfile(new AssemblyMappingProfile(typeof(AssemblyMappingProfile).Assembly));
+            });
 
             services.AddControllers();
 
