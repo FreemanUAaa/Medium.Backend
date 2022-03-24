@@ -16,6 +16,7 @@ namespace Medium.Users.Core.Common.Password
         {
             if (salt == null)
             {
+                salt = new byte[SaltSize];
                 using RNGCryptoServiceProvider rngCsp = new RNGCryptoServiceProvider();
                 rngCsp.GetNonZeroBytes(salt);
             }

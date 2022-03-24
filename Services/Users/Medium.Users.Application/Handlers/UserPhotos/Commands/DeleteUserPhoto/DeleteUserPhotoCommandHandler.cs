@@ -3,7 +3,9 @@ using Medium.Users.Core.Exceptions;
 using Medium.Users.Core.Interfaces;
 using Medium.Users.Core.Interfaces.Services;
 using Medium.Users.Core.Models;
+using Medium.Users.Core.Redis;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
@@ -21,8 +23,10 @@ namespace Medium.Users.Application.Handlers.UserPhotos.Commands.DeleteUserPhoto
 
         private readonly IFileManager fileManager;
 
-        public DeleteUserPhotoCommandHandler(IDatabaseContext database, IFileManager fileManager, ILogger<DeleteUserPhotoCommandHandler> logger) =>
-            (this.database, this.fileManager, this.logger) = (database, fileManager, logger);
+        private readonly IDistributedCache cache;
+
+        public DeleteUserPhotoCommandHandler(IDatabaseContext database, IFileManager fileManager, IDistributedCache cache, ILogger<DeleteUserPhotoCommandHandler> logger) =>
+            (this.database, this.fileManager, this.cache, this.logger) = (database, fileManager, cache, logger);
 
         public async Task<Unit> Handle(DeleteUserPhotoCommand request, CancellationToken cancellationToken)
         {
@@ -55,6 +59,8 @@ namespace Medium.Users.Application.Handlers.UserPhotos.Commands.DeleteUserPhoto
 
             database.UserPhotos.Remove(userPhoto);
             await database.SaveChangesAsync(cancellationToken);
+
+            await cache.RemoveAsync(RedisKeys.GetUserPhotoKey(request.UserId));
 
             logger.LogInformation("The file was successfully deleted");
 

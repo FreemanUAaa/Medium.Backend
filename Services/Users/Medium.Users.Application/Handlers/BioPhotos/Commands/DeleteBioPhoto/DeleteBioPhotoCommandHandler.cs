@@ -3,6 +3,8 @@ using Medium.Users.Core.Exceptions;
 using Medium.Users.Core.Interfaces;
 using Medium.Users.Core.Interfaces.Services;
 using Medium.Users.Core.Models;
+using Medium.Users.Core.Redis;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
@@ -19,8 +21,10 @@ namespace Medium.Users.Application.Handlers.BioPhotos.Commands.DeleteBioPhoto
 
         private readonly IFileManager fileManager;
 
-        public DeleteBioPhotoCommandHandler(IDatabaseContext database, IFileManager fileManager, ILogger<DeleteBioPhotoCommandHandler> logger) =>
-            (this.database, this.fileManager, this.logger) = (database, fileManager, logger);
+        private readonly IDistributedCache cache;
+
+        public DeleteBioPhotoCommandHandler(IDatabaseContext database, IFileManager fileManager, IDistributedCache cache, ILogger<DeleteBioPhotoCommandHandler> logger) =>
+            (this.database, this.fileManager, this.cache, this.logger) = (database, fileManager, cache, logger);
 
         public async Task<Unit> Handle(DeleteBioPhotoCommand request, CancellationToken cancellationToken)
         {
@@ -48,6 +52,8 @@ namespace Medium.Users.Application.Handlers.BioPhotos.Commands.DeleteBioPhoto
 
             database.BioPhotos.Remove(bioPhoto);
             await database.SaveChangesAsync(cancellationToken);
+
+            await cache.RemoveAsync(RedisKeys.GetUserBioKey(bioPhoto.Id));
 
             logger.LogInformation("The file was successfully deleted");
 

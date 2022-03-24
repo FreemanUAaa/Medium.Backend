@@ -3,7 +3,9 @@ using Medium.Users.Core.Exceptions;
 using Medium.Users.Core.Interfaces;
 using Medium.Users.Core.Interfaces.Services;
 using Medium.Users.Core.Models;
+using Medium.Users.Core.Redis;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -22,8 +24,10 @@ namespace Medium.Users.Application.Handlers.Users.Commands.DeleteUser
 
         private readonly IFileManager fileManager;
 
-        public DeleteUserCommandHandler(IDatabaseContext database, IFileManager fileManager, ILogger<DeleteUserCommandHandler> logger) =>
-            (this.database, this.fileManager, this.logger) = (database, fileManager, logger);
+        private readonly IDistributedCache cache;
+
+        public DeleteUserCommandHandler(IDatabaseContext database, IFileManager fileManager, IDistributedCache cache, ILogger<DeleteUserCommandHandler> logger) =>
+            (this.database, this.fileManager, this.cache, this.logger) = (database, fileManager, cache, logger);
 
         public async Task<Unit> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
         {
@@ -44,6 +48,7 @@ namespace Medium.Users.Application.Handlers.Users.Commands.DeleteUser
             database.Users.Remove(user);
             await database.SaveChangesAsync(cancellationToken);
 
+            await cache.RemoveAsync(RedisKeys.GetUserDetailsKey(user.Id));
 
             logger.LogInformation($"The user with: \"{request.UserId}\" ID has been removed");
 
