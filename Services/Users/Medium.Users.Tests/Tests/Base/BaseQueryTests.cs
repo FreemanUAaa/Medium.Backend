@@ -8,15 +8,18 @@ using Medium.Users.Core.Interfaces.Mapper;
 using Medium.Users.Core.Interfaces.Services;
 using Medium.Users.Database;
 using Medium.Users.Tests.Database;
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace Medium.Users.Tests.Tests.Base
 {
-    public abstract class BaseQueryTests
+    public abstract class BaseQueryTests<TLogger> where TLogger : class
     {
         public readonly IDatabaseContext Database;
 
         public readonly IFileManager FileManager;
+
+        public readonly ILogger<TLogger> Logger;
 
         public readonly IMapper Mapper;
 
@@ -38,6 +41,8 @@ namespace Medium.Users.Tests.Tests.Base
             });
 
             Mapper = configurationProvider.CreateMapper();
+
+            Logger = new Mock<ILogger<TLogger>>().Object;
         }
     }
 }

@@ -67,7 +67,7 @@ namespace Medium.Users.Application.Handlers.Users.Queries.LoginUser
                 return null;
             }
 
-            var claims = new List<Claim> { new Claim(ClaimsIdentity.DefaultNameClaimType, user.Id.ToString()), };
+            List<Claim> claims = new List<Claim> { new Claim(ClaimsIdentity.DefaultNameClaimType, user.Id.ToString()), };
             ClaimsIdentity claimsIdentity =
             new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType,
                 ClaimsIdentity.DefaultRoleClaimType);

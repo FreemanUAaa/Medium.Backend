@@ -1,8 +1,6 @@
 ﻿using Medium.Users.Application.Handlers.Users.Commands.CreateUser;
 using Medium.Users.Core.Models;
 using Medium.Users.Tests.Tests.Base;
-using Microsoft.Extensions.Logging;
-using Moq;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,13 +8,13 @@ using Xunit;
 
 namespace Medium.Users.Tests.Tests.Users.Commands
 {
-    public class CreateUserCommandHandlerTests : BaseCommandTests
+    public class CreateUserCommandHandlerTests : BaseCommandTests<CreateUserCommandHandler>
     {
+
         [Fact]
         public async void CreateUserCommandHandlerSuccess()
         {
-            ILogger<CreateUserCommandHandler> logger = new Mock<ILogger<CreateUserCommandHandler>>().Object;
-            CreateUserCommandHandler handler = new CreateUserCommandHandler(Database, logger);
+            CreateUserCommandHandler handler = new CreateUserCommandHandler(Database, Logger);
             CreateUserCommand command = new CreateUserCommand()
             {
                 Name = "test-name",
@@ -35,8 +33,7 @@ namespace Medium.Users.Tests.Tests.Users.Commands
         public async void CreateUserCommandHandlerFailOnWrongEmail()
         {
             User user = await CreateAndAddUserToDatabase();
-            ILogger<CreateUserCommandHandler> logger = new Mock<ILogger<CreateUserCommandHandler>>().Object;
-            CreateUserCommandHandler handler = new CreateUserCommandHandler(Database, logger);
+            CreateUserCommandHandler handler = new CreateUserCommandHandler(Database, Logger);
             CreateUserCommand command = new CreateUserCommand()
             {
                 Name = "test-name",

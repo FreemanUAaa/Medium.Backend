@@ -1,8 +1,6 @@
 ﻿using Medium.Users.Application.Handlers.Users.Queries.GetUserDetails;
 using Medium.Users.Core.Models;
 using Medium.Users.Tests.Tests.Base;
-using Microsoft.Extensions.Logging;
-using Moq;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,14 +8,13 @@ using Xunit;
 
 namespace Medium.Users.Tests.Tests.Users.Queries
 {
-    public class GetUserDetailsQueryHandlerTests : BaseQueryTests
+    public class GetUserDetailsQueryHandlerTests : BaseQueryTests<GetUserDetailsQueryHandler>
     {
         [Fact]
         public async void GetUserDetailsQueryHandlerSuccess()
         {
             User user = await CreateAndAddUserToDatabase();
-            ILogger<GetUserDetailsQueryHandler> logger = new Mock<ILogger<GetUserDetailsQueryHandler>>().Object;
-            GetUserDetailsQueryHandler handler = new GetUserDetailsQueryHandler(Database, Mapper, logger);
+            GetUserDetailsQueryHandler handler = new GetUserDetailsQueryHandler(Database, Mapper, Logger);
             GetUserDetailsQuery query = new GetUserDetailsQuery() { UserId = user.Id };
 
 
@@ -30,8 +27,7 @@ namespace Medium.Users.Tests.Tests.Users.Queries
         [Fact]
         public async void GetUserDetailsQueryHandlerFailOnWrongUserId()
         {
-            ILogger<GetUserDetailsQueryHandler> logger = new Mock<ILogger<GetUserDetailsQueryHandler>>().Object;
-            GetUserDetailsQueryHandler handler = new GetUserDetailsQueryHandler(Database, Mapper, logger);
+            GetUserDetailsQueryHandler handler = new GetUserDetailsQueryHandler(Database, Mapper, Logger);
             GetUserDetailsQuery query = new GetUserDetailsQuery();
 
 

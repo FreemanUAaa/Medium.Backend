@@ -3,39 +3,43 @@ using Medium.Users.Application.Handlers.Users.Queries.LoginUser;
 using Medium.Users.Core.Common.Password;
 using Medium.Users.Core.Models;
 using Medium.Users.Tests.Tests.Base;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using Shouldly;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
 namespace Medium.Users.Tests.Tests.Users.Queries
 {
-    public class LoginUserQueryHandlerTests : BaseCommandTests
+    public class LoginUserQueryHandlerTests : BaseCommandTests<LoginUserQueryHandler>
     {
+        private readonly IOptions<AuthOptions> authOptions;
+
+        public LoginUserQueryHandlerTests()
+        {
+            AuthOptions auth = new AuthOptions()
+            {
+                Issuer = "test-issuer",
+                Audience = "test-audience",
+                Key = "mysupersecret_secretkey!123",
+                Lifetime = 120,
+            };
+
+            authOptions = Options.Create(auth);
+        }
+
         [Fact]
         public async void LoginUserQueryHandlerSuccess()
         {
             byte[] salt = PasswordHasher.GetNewSalt();
-            string hashPassword = PasswordHasher.HashPassword("test-password", salt).Hash;
             User user = await CreateAndAddUserToDatabase("test-password", salt);
-            AuthOptions authOptions = new AuthOptions()
-            {
-                Issuer = "test-issuer", Audience = "test-audience",
-                Key = "test-key", Lifetime = 120,
-            };
-            IOptions<AuthOptions> options = new Mock<IOptions<AuthOptions>>().SetupProperty(x => x.Value, authOptions).Object;
-            ILogger<LoginUserQueryHandler> logger = new Mock<ILogger<LoginUserQueryHandler>>().Object;
-            LoginUserQueryHandler handler = new LoginUserQueryHandler(Database, logger, options);
+            LoginUserQueryHandler handler = new LoginUserQueryHandler(Database, Logger, authOptions);
             LoginUserQuery query = new LoginUserQuery()
             {
                 Email = user.Email,
-                Password = user.Email,
+                Password = "test-password",
             };
 
 
@@ -45,6 +49,21 @@ namespace Medium.Users.Tests.Tests.Users.Queries
             Assert.NotNull(vm);
             Assert.NotEmpty(vm.AccessToken);
             vm.UserId.ShouldBe(user.Id);
+        }
+
+        [Fact]
+        public async void LoginUserQueryHandlerFailOnWrongUserData()
+        {
+            LoginUserQueryHandler handler = new LoginUserQueryHandler(Database, Logger, authOptions);
+            LoginUserQuery query = new LoginUserQuery()
+            {
+                Email = "test-email",
+                Password = "test-password",
+            };
+
+
+            await Assert.ThrowsAsync<Exception>(async () =>
+                await handler.Handle(query, CancellationToken.None));
         }
 
         private async Task<User> CreateAndAddUserToDatabase(string password, byte[] salt)

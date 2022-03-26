@@ -8,13 +8,15 @@ using Moq;
 
 namespace Medium.Users.Tests.Tests.Base
 {
-    public abstract class BaseCommandTests
+    public abstract class BaseCommandTests<TLogger> where TLogger : class
     {
         public readonly IDatabaseContext Database;
 
         public readonly IFileManager FileManager;
 
         public readonly IDistributedCache Cache;
+
+        public readonly ILogger<TLogger> Logger;
 
         public BaseCommandTests()
         {
@@ -26,6 +28,8 @@ namespace Medium.Users.Tests.Tests.Base
             );
 
             Cache = new Mock<IDistributedCache>().Object;
+
+            Logger = new Mock<ILogger<TLogger>>().Object;
         }
     }
 }

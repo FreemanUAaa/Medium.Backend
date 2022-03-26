@@ -2,19 +2,15 @@
 using Medium.Users.Core.Models;
 using Medium.Users.Tests.Assets;
 using Medium.Users.Tests.Tests.Base;
-using Microsoft.Extensions.Logging;
-using Moq;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
 namespace Medium.Users.Tests.Tests.Users.Commands
 {
-    public class DeleteUserCommandHandlerTests : BaseCommandTests
+    public class DeleteUserCommandHandlerTests : BaseCommandTests<DeleteUserCommandHandler>
     {
         [Fact]
         public async void DeleteUserCommandHandlerSuccess()
@@ -22,8 +18,7 @@ namespace Medium.Users.Tests.Tests.Users.Commands
             User user = await CreateAndAddUserToDatabase();
             UserPhoto userPhoto = await CreateAndAddUserPhotoToDatabase(user.Id);
             BioPhoto bioPhoto = await CreateAndAddBioPhotoToDatabase(user.Id);
-            ILogger<DeleteUserCommandHandler> logger = new Mock<ILogger<DeleteUserCommandHandler>>().Object;
-            DeleteUserCommandHandler handler = new DeleteUserCommandHandler(Database, FileManager, Cache, logger);
+            DeleteUserCommandHandler handler = new DeleteUserCommandHandler(Database, FileManager, Cache, Logger);
             DeleteUserCommand command = new DeleteUserCommand() { UserId = user.Id };
 
 
@@ -40,8 +35,7 @@ namespace Medium.Users.Tests.Tests.Users.Commands
         [Fact]
         public async void DeleteUserCommandHandlerFailOnwrongUserdId()
         {
-            ILogger<DeleteUserCommandHandler> logger = new Mock<ILogger<DeleteUserCommandHandler>>().Object;
-            DeleteUserCommandHandler handler = new DeleteUserCommandHandler(Database, FileManager, Cache, logger);
+            DeleteUserCommandHandler handler = new DeleteUserCommandHandler(Database, FileManager, Cache, Logger);
             DeleteUserCommand command = new DeleteUserCommand();
 
 
