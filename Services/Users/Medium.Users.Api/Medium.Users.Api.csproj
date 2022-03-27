@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Controllers\UsersController.cs~RF6d8fac1.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="wwwroot\BioPhotos\" />
     <Folder Include="wwwroot\UserPhotos\" />
   </ItemGroup>

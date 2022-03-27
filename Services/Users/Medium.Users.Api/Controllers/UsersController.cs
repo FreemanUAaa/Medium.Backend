@@ -3,6 +3,7 @@ using Medium.Users.Application.Handlers.Users.Commands.CreateUser;
 using Medium.Users.Application.Handlers.Users.Commands.DeleteUser;
 using Medium.Users.Application.Handlers.Users.Queries.GetUserDetails;
 using Medium.Users.Application.Handlers.Users.Queries.LoginUser;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -40,15 +41,18 @@ namespace Medium.Users.Api.Controllers
             return Ok(await Mediator.Send(command));
         }
 
-        [HttpDelete("{userId}")]
+        [Authorize]
+        [HttpDelete()]
         [ApiVersion("1.0")]
         [ProducesResponseType(200)]
         [ProducesResponseType(typeof(string), 400)]
-        public async Task<ActionResult<Guid>> Delete([FromRoute] Guid userId)
+        public async Task<ActionResult> Delete()
         {
-            DeleteUserCommand command = new DeleteUserCommand() { UserId = userId };
-                 
-            return Ok(await Mediator.Send(command));
+            DeleteUserCommand command = new DeleteUserCommand() { UserId = UserId };
+
+            await Mediator.Send(command);
+
+            return NoContent();
         }
     }
 }

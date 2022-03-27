@@ -9,6 +9,9 @@ using Medium.Users.Application.Common.Mapper;
 using Medium.Users.Core.Interfaces.Mapper;
 using System.Reflection;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Medium.Users.Application.Common;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Medium.Users.Api
 {
@@ -78,6 +81,7 @@ namespace Medium.Users.Api
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
