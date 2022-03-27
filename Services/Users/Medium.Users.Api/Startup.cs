@@ -8,6 +8,7 @@ using Medium.Users.Database;
 using Medium.Users.Application.Common.Mapper;
 using Medium.Users.Core.Interfaces.Mapper;
 using System.Reflection;
+using Microsoft.OpenApi.Models;
 
 namespace Medium.Users.Api
 {
@@ -46,6 +47,17 @@ namespace Medium.Users.Api
                     opt.AllowAnyOrigin();
                 });
             });
+
+            services.AddApiVersioning();
+
+            services.AddSwaggerGen(opt =>
+            {
+                opt.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Song Service",
+                    Version = "v1"
+                });
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -56,6 +68,9 @@ namespace Medium.Users.Api
             }
 
             app.AddApplicationMiddlewares();
+
+            app.UseSwagger();
+            app.UseSwaggerUI();
 
             app.UseHttpsRedirection();
 

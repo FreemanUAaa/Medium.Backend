@@ -14,23 +14,23 @@ namespace Medium.Users.Api
             Log.Logger = new LoggerConfiguration()
                 .WriteTo.Console().CreateLogger();
 
-            using IHost host = CreateHostBuilder(args).Build();
-            using (IServiceScope scope = host.Services.CreateScope())
-            {
-                IServiceProvider serviceProvider = scope.ServiceProvider;
+            IHost host = CreateHostBuilder(args).Build();
 
+            using (var scope = host.Services.CreateScope())
+            {
+                var serviceProvider = scope.ServiceProvider;
                 try
                 {
                     var context = serviceProvider.GetRequiredService<DatabaseContext>();
                     DatabaseInitializator.Initializat(context);
                 }
-                catch (Exception e)
+                catch (Exception exception)
                 {
-                    Log.Fatal(e.Message);
+                    throw exception;
                 }
             }
 
-            host.Start();
+            host.Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

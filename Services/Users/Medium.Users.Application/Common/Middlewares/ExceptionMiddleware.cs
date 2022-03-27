@@ -19,7 +19,8 @@ namespace Medium.Users.Application.Common.Middlewares
             catch (Exception error)
             {
                 http.Response.StatusCode = StatusCodes.Status400BadRequest;
-                await http.Response.WriteAsync(error.Message);
+                string errorMessage = $"{{\"error\": \"{error.Message}\" }}";
+                await http.Response.WriteAsync(errorMessage);
             }
         }
     }
