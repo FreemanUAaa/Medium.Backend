@@ -1,0 +1,35 @@
+﻿syntax = "proto3";
+
+service UserSerivce {
+	rpc IsExists (IsExistsRequest) returns (IsExistsResponse);
+
+	rpc GetUser (GetUserRequest) returns (UserResponse);
+}
+
+message IsExistsRequest {
+    string UserId = 1;
+}
+
+message GetUserRequest {
+    string UserId = 1;
+}
+
+message UserResponse {
+    string Id = 1;
+
+    string Name = 2;
+
+    string UserName = 3;
+
+    string PasswordHash = 4;
+
+    bytes PasswordSalt = 5;
+
+    string Bio = 6;
+
+    string Email = 7;
+}
+
+message IsExistsResponse {
+    bool IsExists = 1;
+}

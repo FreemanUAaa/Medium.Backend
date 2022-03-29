@@ -15,6 +15,9 @@ namespace Medium.Users.Application.Handlers.Users.Commands.UpdateUser
 
         private readonly IDatabaseContext database;
 
+        public UpdateUserCommandHandler(IDatabaseContext database, ILogger<UpdateUserCommandHandler> logger) =>
+            (this.database, this.logger) = (database, logger);
+
         public async Task<Guid> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
         {
             User user = await database.Users.FindAsync(request.UserId);

@@ -28,6 +28,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Medium.Users.Application\Medium.Users.Application.csproj" />
     <ProjectReference Include="..\Medium.Users.Database\Medium.Users.Database.csproj" />
+    <ProjectReference Include="..\Medium.Users.GrpcServices\Medium.Users.GrpcServices.csproj" />
   </ItemGroup>
 
 

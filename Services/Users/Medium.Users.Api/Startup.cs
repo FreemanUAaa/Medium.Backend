@@ -9,9 +9,7 @@ using Medium.Users.Application.Common.Mapper;
 using Medium.Users.Core.Interfaces.Mapper;
 using System.Reflection;
 using Microsoft.OpenApi.Models;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Medium.Users.Application.Common;
-using Microsoft.IdentityModel.Tokens;
+using Medium.Users.GrpcServices;
 
 namespace Medium.Users.Api
 {
@@ -30,6 +28,8 @@ namespace Medium.Users.Api
 
             services.AddApplication(Configuration);
             services.AddDatabase(connection);
+
+            services.AddGrpcServices();
 
             services.AddAutoMapper(config =>
             {
@@ -86,6 +86,7 @@ namespace Medium.Users.Api
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.AddGrpcEndpoint();
                 endpoints.MapControllers();
             });
         }

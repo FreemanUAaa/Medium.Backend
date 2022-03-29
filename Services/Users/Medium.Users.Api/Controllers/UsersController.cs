@@ -1,6 +1,7 @@
 ﻿using Medium.Users.Api.Controllers.Base;
 using Medium.Users.Application.Handlers.Users.Commands.CreateUser;
 using Medium.Users.Application.Handlers.Users.Commands.DeleteUser;
+using Medium.Users.Application.Handlers.Users.Commands.UpdateUser;
 using Medium.Users.Application.Handlers.Users.Queries.GetUserDetails;
 using Medium.Users.Application.Handlers.Users.Queries.LoginUser;
 using Microsoft.AspNetCore.Authorization;
@@ -38,6 +39,18 @@ namespace Medium.Users.Api.Controllers
         [ProducesResponseType(typeof(Guid), 200)]
         public async Task<ActionResult<Guid>> Register([FromForm] CreateUserCommand command)
         {
+            return Ok(await Mediator.Send(command));
+        }
+
+        [HttpPut()]
+        [Authorize]
+        [ApiVersion("1.0")]
+        [ProducesResponseType(typeof(Guid), 200)]
+        [ProducesResponseType(typeof(string), 400)]
+        public async Task<ActionResult<Guid>> Update([FromForm] UpdateUserCommand command)
+        {
+            command.UserId = UserId;
+
             return Ok(await Mediator.Send(command));
         }
 
