@@ -14,7 +14,7 @@ namespace Medium.Users.Application.Services
         public FileManager(string userSavePhotoPath, string bioSavePhotoPath) =>
             (UserSavePhotoPath, BioSavePhotoPath) = (userSavePhotoPath, bioSavePhotoPath);
 
-        public async void DeleteFileAsync(string path, CancellationToken cancellationToken = default)
+        public async Task DeleteFileAsync(string path, CancellationToken cancellationToken = default)
         {
             if (path == null || !File.Exists(path))
             {
@@ -24,7 +24,7 @@ namespace Medium.Users.Application.Services
             await Task.Run(() => File.Delete(path));
         }
 
-        public async void SaveFileAsync(IFormFile file, string path, CancellationToken cancellationToken = default)
+        public async Task SaveFileAsync(IFormFile file, string path, CancellationToken cancellationToken = default)
         {
             if (file == null | path == null)
             {

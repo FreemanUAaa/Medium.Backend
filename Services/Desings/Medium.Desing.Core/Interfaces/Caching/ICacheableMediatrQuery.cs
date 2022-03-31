@@ -1,4 +1,4 @@
-﻿namespace Medium.Users.Core.Interfaces.Caching
+﻿namespace Medium.Desings.Core.Interfaces.Caching
 {
     public interface ICacheableMediatrQuery
     {

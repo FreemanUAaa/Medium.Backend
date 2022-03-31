@@ -9,7 +9,7 @@ namespace Medium.Users.GrpcServices
         public static IEndpointRouteBuilder AddGrpcEndpoint(this IEndpointRouteBuilder endpoint)
         {
             endpoint.MapGrpcService<UserService>();
-
+ 
             return endpoint;
         }
     }
