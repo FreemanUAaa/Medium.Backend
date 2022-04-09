@@ -1,6 +1,6 @@
 ﻿using MediatR;
-using Medium.Users.Core.Common.FileExtension;
-using Medium.Users.Core.Common.FileName;
+using Medium.Users.Core.Common.FileExtensions;
+using Medium.Users.Core.Common.FileNames;
 using Medium.Users.Core.Exceptions;
 using Medium.Users.Core.Interfaces;
 using Medium.Users.Core.Interfaces.Services;
@@ -76,7 +76,7 @@ namespace Medium.Users.Application.Handlers.UserPhotos.Commands.CreateUserPhoto
 
             try
             {
-                fileManager.SaveFileAsync(request.Photo, newFilePath);
+                await fileManager.SaveFileAsync(request.Photo, newFilePath);
             }
             catch
             {

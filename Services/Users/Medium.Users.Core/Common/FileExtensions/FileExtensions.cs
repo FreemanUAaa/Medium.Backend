@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Medium.Users.Core.Common.FileExtension
+namespace Medium.Users.Core.Common.FileExtensions
 {
     public static class FileExtensions
     {

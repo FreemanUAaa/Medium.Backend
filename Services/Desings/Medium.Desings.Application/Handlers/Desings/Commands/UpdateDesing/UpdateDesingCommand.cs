@@ -10,41 +10,43 @@ namespace Medium.Desings.Application.Handlers.Desings.Commands.UpdateDesing
 
         public bool ShowBlogroll { get; set; }
 
-        public Colors Colors { get; set; }
+        public bool IsTextSelected { get; set; }
 
-        public FontIds FontIds { get; set; }
+        public ColorsRequest Colors { get; set; }
 
-        public NameText NameText { get; set; }
+        public FontIdsRequest FontIds { get; set; }
+
+        public NameTextRequest NameText { get; set; }
 
         public IFormFile NameLogo { get; set; }
 
-        public HeaderColor HeaderColor { get; set; }
+        public HeaderColorRequest HeaderColor { get; set; }
 
-        public HeaderImage HeaderImage { get; set; }
+        public HeaderImageRequest HeaderImage { get; set; }
     }
 
-    public class HeaderColor
+    public class HeaderColorRequest
     {
         public bool IsGradient { get; set; }
 
         public string ColorRgb { get; set; }
     }
 
-    public class NameText
+    public class NameTextRequest
     {
         public string Text { get; set; }
 
         public string ColorRgb { get; set; }
     }
 
-    public class Colors
+    public class ColorsRequest
     {
         public string AccentRgb { get; set; }
 
         public string BackgraundRgb { get; set; }
     }
 
-    public class FontIds
+    public class FontIdsRequest
     {
         public Guid Title { get; set; }
 
@@ -53,7 +55,7 @@ namespace Medium.Desings.Application.Handlers.Desings.Commands.UpdateDesing
         public Guid Details { get; set; }
     }
 
-    public class HeaderImage
+    public class HeaderImageRequest
     {
         public string Display { get; set; }
 

@@ -48,7 +48,7 @@ namespace Medium.Users.Application.Handlers.UserPhotos.Commands.DeleteUserPhoto
             {
                 try
                 {
-                    fileManager.DeleteFileAsync(filePath);
+                    await fileManager.DeleteFileAsync(filePath);
                 }
                 catch
                 {

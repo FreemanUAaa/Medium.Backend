@@ -1,4 +1,4 @@
-﻿namespace Medium.Users.Core.Common.Password
+﻿namespace Medium.Users.Core.Common.Passwords
 {
     public class PasswordHashResponse
     {

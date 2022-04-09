@@ -6,6 +6,8 @@ namespace Medium.Desings.Core.Models
     {
         public Guid Id { get; set; }
 
+        public bool IsTextSelected { get; set; }
+
         public HeaderNameLogo Logo { get; set; }
 
         public HeaderNameText Text { get; set; }

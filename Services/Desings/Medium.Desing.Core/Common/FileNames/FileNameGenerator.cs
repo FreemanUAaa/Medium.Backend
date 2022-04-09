@@ -1,7 +1,6 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 
-namespace Medium.Users.Core.Common.FileName
+namespace Medium.Desings.Core.Common.FileNames
 {
     public static class FileNameGenerator
     {
@@ -10,7 +9,7 @@ namespace Medium.Users.Core.Common.FileName
             string newFileName;
             string newFilePath;
 
-            for (int i = 0;  i <= attempts; i++)
+            for (int i = 0; i <= attempts; i++)
             {
                 newFileName = GetRandomFileName(fileExtension);
 
@@ -29,7 +28,7 @@ namespace Medium.Users.Core.Common.FileName
         {
             if (fileExtension.Contains("."))
             {
-                 return Path.GetRandomFileName() + fileExtension;
+                return Path.GetRandomFileName() + fileExtension;
             }
 
             return Path.GetRandomFileName() + "." + fileExtension;

@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Medium.Users.Application.Common;
-using Medium.Users.Core.Common.Password;
+using Medium.Users.Core.Common.Passwords;
 using Medium.Users.Core.Exceptions;
 using Medium.Users.Core.Interfaces;
 using Medium.Users.Core.Models;

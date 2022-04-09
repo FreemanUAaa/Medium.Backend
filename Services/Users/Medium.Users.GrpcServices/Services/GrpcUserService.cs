@@ -8,14 +8,13 @@ using System.Threading.Tasks;
 
 namespace Medium.Users.GrpcServices.Services
 {
-    public class UserService : UserSerivce.UserSerivceBase
+    public class GrpcUserService : UserService.UserServiceBase
     {
-
-        private readonly ILogger<UserService> logger;
+        private readonly ILogger<GrpcUserService> logger;
 
         private readonly IDatabaseContext database;
 
-        public UserService(IDatabaseContext database, ILogger<UserService> logger) =>
+        public GrpcUserService(IDatabaseContext database, ILogger<GrpcUserService> logger) =>
             (this.database, this.logger) = (database, logger);
 
         public override async Task<UserResponse> GetUser(GetUserRequest request, ServerCallContext context)

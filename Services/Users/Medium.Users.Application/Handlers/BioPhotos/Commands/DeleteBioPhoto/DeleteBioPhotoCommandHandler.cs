@@ -41,7 +41,7 @@ namespace Medium.Users.Application.Handlers.BioPhotos.Commands.DeleteBioPhoto
             {
                 try
                 {
-                    fileManager.DeleteFileAsync(filePath);
+                    await fileManager.DeleteFileAsync(filePath);
                 }
                 catch
                 {
