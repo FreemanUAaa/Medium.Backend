@@ -5,7 +5,7 @@ namespace Medium.Drafts.Application.Handlers.Drafts.Commands.UpdateDraft
 {
     public class UpdateDraftCommand : IRequest
     {
-        public Guid Id { get; set; }
+        public Guid DraftId { get; set; }
 
         public string Title { get; set; }
 

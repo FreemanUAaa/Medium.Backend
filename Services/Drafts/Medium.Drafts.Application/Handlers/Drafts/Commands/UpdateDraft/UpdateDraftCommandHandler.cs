@@ -23,7 +23,7 @@ namespace Medium.Drafts.Application.Handlers.Drafts.Commands.UpdateDraft
 
         public async Task<Unit> Handle(UpdateDraftCommand request, CancellationToken cancellationToken)
         {
-            Draft draft = await database.Drafts.FindAsync(request.Id);
+            Draft draft = await database.Drafts.FindAsync(request.DraftId);
 
             if (draft == null)
             {
