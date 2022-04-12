@@ -3,7 +3,9 @@ using Medium.Drafts.Core.Common.ReadTime;
 using Medium.Drafts.Core.Exceptions;
 using Medium.Drafts.Core.Interfaces;
 using Medium.Drafts.Core.Models;
+using Medium.Drafts.Core.Redis;
 using Medium.Drafts.GrpcClient.Interfaces;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading;
@@ -19,8 +21,10 @@ namespace Medium.Drafts.Application.Handlers.Drafts.Commands.CreateDraft
 
         private readonly IDatabaseContext database;
 
-        public CreateDraftCommandHandler(IDatabaseContext database, IGrpcUserService grpcUserService, ILogger<CreateDraftCommandHandler> logger) =>
-            (this.database, this.grpcUserService, this.logger) = (database, grpcUserService, logger);
+        private readonly IDistributedCache cache;
+
+        public CreateDraftCommandHandler(IDatabaseContext database, IDistributedCache cache, IGrpcUserService grpcUserService, ILogger<CreateDraftCommandHandler> logger) =>
+            (this.database, this.cache, this.grpcUserService, this.logger) = (database, cache, grpcUserService, logger);
 
         public async Task<Guid> Handle(CreateDraftCommand request, CancellationToken cancellationToken)
         {
@@ -45,6 +49,8 @@ namespace Medium.Drafts.Application.Handlers.Drafts.Commands.CreateDraft
 
             database.Drafts.Add(draft);
             await database.SaveChangesAsync(cancellationToken);
+
+            await cache.RemoveAsync(RedisKeys.GetDraftDetailsKey(request.UserId));
 
             logger.LogInformation("The draft was successfully created");
 

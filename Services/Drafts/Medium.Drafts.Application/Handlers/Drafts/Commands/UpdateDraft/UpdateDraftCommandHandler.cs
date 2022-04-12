@@ -3,10 +3,10 @@ using Medium.Drafts.Core.Common.ReadTime;
 using Medium.Drafts.Core.Exceptions;
 using Medium.Drafts.Core.Interfaces;
 using Medium.Drafts.Core.Models;
+using Medium.Drafts.Core.Redis;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,12 +14,14 @@ namespace Medium.Drafts.Application.Handlers.Drafts.Commands.UpdateDraft
 {
     public class UpdateDraftCommandHandler : IRequestHandler<UpdateDraftCommand>
     {
-        private readonly ILogger<UpdateDraftCommand> logger;
+        private readonly ILogger<UpdateDraftCommandHandler> logger;
 
         private readonly IDatabaseContext database;
 
-        public UpdateDraftCommandHandler(IDatabaseContext database, ILogger<UpdateDraftCommand> logger) =>
-            (this.database, this.logger) = (database, logger);
+        private readonly IDistributedCache cache;
+
+        public UpdateDraftCommandHandler(IDatabaseContext database, IDistributedCache cache, ILogger<UpdateDraftCommandHandler> logger) =>
+            (this.database, this.cache, this.logger) = (database, cache, logger);
 
         public async Task<Unit> Handle(UpdateDraftCommand request, CancellationToken cancellationToken)
         {
@@ -39,6 +41,8 @@ namespace Medium.Drafts.Application.Handlers.Drafts.Commands.UpdateDraft
 
             database.Drafts.Update(draft);
             await database.SaveChangesAsync(cancellationToken);
+
+            await cache.RemoveAsync(RedisKeys.GetDraftDetailsKey(request.DraftId));
 
             logger.LogInformation("The draft was successfully updated");
 

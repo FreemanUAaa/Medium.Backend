@@ -9,6 +9,7 @@ namespace Medium.Users.Application.Handlers.Users.Queries.GetUserDetails
     {
         public Guid UserId { get; set; }
 
+
         public string CacheKey => RedisKeys.GetUserDetailsKey(UserId);
     }
 }

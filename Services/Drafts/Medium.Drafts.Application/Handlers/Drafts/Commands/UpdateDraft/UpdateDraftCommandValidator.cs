@@ -12,7 +12,7 @@ namespace Medium.Drafts.Application.Handlers.Drafts.Commands.UpdateDraft
 
             RuleFor(x => x.Body).NotEmpty();
 
-            RuleFor(x => x.Id).NotEmpty();
+            RuleFor(x => x.DraftId).NotEmpty();
         }
     }
 }
